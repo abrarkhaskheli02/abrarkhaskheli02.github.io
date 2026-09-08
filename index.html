@@ -1,29 +1,274 @@
-const CACHE_NAME = "abrar-portal-v1";
-‎
-‎const FILES = [
-‎  "./",
-‎  "./index.html",
-‎  "./manifest.json",
-‎  "./sw.js",
-‎  "./icon.svg"
-‎];
-‎
-‎self.addEventListener("install", event => {
-‎  event.waitUntil(
-‎    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES))
-‎  );
-‎  self.skipWaiting();
-‎});
-‎
-‎self.addEventListener("activate", event => {
-‎  event.waitUntil(self.clients.claim());
-‎});
-‎
-‎self.addEventListener("fetch", event => {
-‎  event.respondWith(
-‎    caches.match(event.request).then(response => {
-‎      return response || fetch(event.request);
-‎    })
-‎  );
-‎});
-‎
+<!doctype html><html lang="sd" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1769aa"><link rel="manifest" href="manifest.webmanifest">
+<title>Abrar Khaskheli — Land Portal</title>
+<style>
+:root{--p:#1769aa;--d:#0d3b66;--a:#f0a202;--bg:#f4f8fc;--tx:#18324b;--ln:#d8e5ef}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Tahoma,Arial,sans-serif}
+header{background:linear-gradient(135deg,var(--d),var(--p));color:white;padding:22px 16px}.brand{font-weight:bold}.headerrow{display:flex;justify-content:space-between;gap:10px;align-items:center}.lang{border:0;border-radius:10px;padding:9px;background:#ffffff22;color:#fff;font-weight:bold}
+nav{display:flex;overflow:auto;background:#fff;border-bottom:1px solid var(--ln);position:sticky;top:0;z-index:5}nav button{border:0;background:none;padding:14px 16px;font-weight:bold;white-space:nowrap;color:#456}nav button.active{color:var(--p);border-bottom:3px solid var(--p)}
+main{max-width:1000px;margin:auto;padding:16px}.page{display:none}.page.active{display:block}.card{background:#fff;border:1px solid var(--ln);border-radius:18px;padding:18px;margin-bottom:15px;box-shadow:0 5px 18px #173b5510}
+h2{margin:0 0 15px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:16px;border-radius:15px;background:#eef6ff}.stat b{display:block;font-size:26px;margin-top:5px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-weight:bold;display:block;margin-bottom:6px}input,textarea,select{width:100%;padding:13px;border:2px solid var(--ln);border-radius:12px;font-size:16px}.full{grid-column:1/-1}
+.btn{border:0;border-radius:12px;padding:13px 16px;background:var(--p);color:white;font-weight:bold;font-size:16px;cursor:pointer;margin:5px 0}.danger{background:#d64545}.good{background:#198754}.light{background:#eef5fa;color:var(--d)}
+.record{border:1px solid var(--ln);border-radius:14px;padding:13px;margin:9px 0;display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff}.dots{border:0;border-radius:50%;width:42px;height:42px;background:#eef5fa;font-size:22px}
+.menuBox{position:fixed;background:#fff;border:1px solid var(--ln);border-radius:12px;padding:5px;box-shadow:0 8px 25px #0002;z-index:20}.menuBox button{display:block;border:0;background:#fff;padding:11px 18px;width:150px;text-align:right}.notice{padding:13px;background:#fff8e6;border-right:4px solid var(--a);border-radius:10px;line-height:1.8}
+footer{text-align:center;background:var(--d);color:#fff;padding:24px}
+@media(max-width:650px){.grid,.stats{grid-template-columns:1fr}}
+</style><style>
+.contacts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.contact{display:inline-block;text-decoration:none;color:#fff;padding:11px 16px;border-radius:12px;font-weight:bold}
+.fb{background:#1877f2}.wa{background:#25d366}.phone{background:#1769aa}
+</style>
+<style>
+.contacts{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.contact{display:inline-flex;align-items:center;gap:9px;text-decoration:none;color:#fff;padding:11px 16px;border-radius:12px;font-weight:bold}
+.fb{background:#1877f2}.wa{background:#25d366}
+.social-logo{width:22px;height:22px;display:block}
+</style>
+
+<style id="professional-v6-css">
+.v6-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0}
+.v6-card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 5px 20px rgba(13,59,102,.08);border:1px solid #e7eef5}
+.v6-card h3{margin:0 0 8px;color:#0d3b66}
+.v6-stat{font-size:28px;font-weight:800;color:#1769aa}
+.v6-actions{display:flex;gap:9px;flex-wrap:wrap}
+.v6-btn{border:0;border-radius:11px;padding:10px 14px;font-weight:700;cursor:pointer}
+.v6-primary{background:#1769aa;color:#fff}.v6-success{background:#25a55f;color:#fff}
+.v6-warning{background:#f0a202;color:#fff}.v6-danger{background:#d64545;color:#fff}.v6-dark{background:#0d3b66;color:#fff}
+.v6-table{width:100%;border-collapse:collapse;margin-top:12px}.v6-table th,.v6-table td{padding:9px;border-bottom:1px solid #e8edf2;text-align:start}
+.v6-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px}.v6-form input,.v6-form select{padding:10px;border:1px solid #ccd8e2;border-radius:10px}
+#v6Lock{position:fixed;inset:0;background:rgba(5,20,35,.94);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}
+.v6-lockbox{background:#fff;max-width:390px;width:100%;padding:25px;border-radius:20px;text-align:center}
+.v6-lockbox input{width:100%;box-sizing:border-box;padding:13px;border:1px solid #ccd8e2;border-radius:10px;margin:10px 0}
+@media print{.no-print,#v6Lock{display:none!important}.v6-card{box-shadow:none}}
+</style>
+
+<style id="v7-css">
+.v7-search{margin:18px 0;padding:16px;background:#fff;border:1px solid #e7eef5;border-radius:16px;box-shadow:0 5px 20px rgba(13,59,102,.07)}
+.v7-search-row{display:flex;gap:9px}.v7-search-row input{flex:1;padding:12px;border:1px solid #ccd8e2;border-radius:11px;font-size:16px}
+.v7-results{margin-top:10px;font-size:14px}.v7-hit{padding:8px 10px;border-bottom:1px solid #eef2f5}
+.v7-social-img{width:25px;height:25px;object-fit:contain;vertical-align:middle}
+</style>
+<style id="v8-offline-css">
+.v8-offline{display:flex;align-items:center;gap:8px;justify-content:center;padding:9px 12px;margin:10px auto;max-width:620px;border-radius:12px;font-weight:700;background:#eaf7ef;color:#146c3a;border:1px solid #bfe6ce}
+.v8-dot{width:10px;height:10px;border-radius:50%;background:#25a55f;display:inline-block}
+.v8-offline.offline{background:#fff4e5;color:#8a5200;border-color:#f1d29a}.v8-offline.offline .v8-dot{background:#f0a202}
+</style>
+</head><body>
+<header><div class="headerrow"><div><div class="brand">🌾 <span data-k="brand">Abrar Khaskheli</span></div><h1 data-k="title">زمين ۽ حساب ڪتاب پورٽل</h1><div data-k="subtitle">آسان، تيز ۽ موبائل دوست ويب پورٽل</div></div>
+<select class="lang" id="language" onchange="setLanguage(this.value)"><option value="sd">سنڌي</option><option value="ur">اردو</option><option value="en">English</option></select></div></header><div id="v8OfflineStatus" class="v8-offline"><span class="v8-dot"></span><span id="v8OfflineText">🟢 Offline mode ready</span></div>
+<nav>
+<button class="active" onclick="tab('dash',this)" data-k="dashboard">🏠 Dashboard</button>
+<button onclick="tab('records',this)" data-k="records">📋 رڪارڊ</button>
+<button onclick="tab('calc',this)" data-k="calculator">📐 ڪيلڪيوليٽر</button>
+<button onclick="tab('trash',this)" data-k="recovery">♻️ Recovery</button>
+<button onclick="tab('settings',this)" data-k="settings">⚙️ Settings</button>
+</nav>
+<main>
+<section id="dash" class="page active"><div class="card"><h2 data-k="overview">📊 Dashboard</h2><div class="stats"><div class="stat" data-k="total">ڪل رڪارڊ<b id="total">0</b></div><div class="stat" data-k="active">Active<b id="active">0</b></div><div class="stat" data-k="trash">Trash<b id="trash">0</b></div></div></div>
+<div class="card"><h2 data-k="newrecord">➕ نئون رڪارڊ</h2><div class="grid">
+<div><label data-k="owner">مالڪ جو نالو</label><input id="owner"></div><div><label data-k="village">ڳوٺ / شهر</label><input id="village"></div>
+<div><label data-k="survey">خسرو نمبر</label><input id="survey"></div><div><label data-k="area">زمين (چورس فٽ)</label><input id="area" type="number"></div>
+<div class="full"><label data-k="note">نوٽ</label><textarea id="note"></textarea></div></div>
+<button class="btn" onclick="saveRecord()" data-k="save">💾 رڪارڊ محفوظ ڪريو</button></div></section>
+
+<section id="records" class="page"><div class="card"><h2 data-k="landrecords">📋 زمين جا رڪارڊ</h2><input id="search" oninput="render()" data-placeholder="search" placeholder="🔍 ڳولا..."><div id="list"></div></div></section>
+<section id="calc" class="page"><div class="card"><h2 data-k="landcalc">📐 زمين جو حساب</h2><div class="grid"><div><label data-k="width">مينڊيو (فٽ)</label><input id="m" type="number" value="121"></div><div><label data-k="length">لام (فٽ)</label><input id="l" type="number" value="360"></div></div><button class="btn" onclick="calc()" data-k="calculate">🧮 حساب ڪريو</button><div id="result" class="notice"></div></div></section>
+<section id="trashPage" class="page"><div class="card"><h2 data-k="recoveryTitle">♻️ Recovery / Trash</h2><div class="notice" data-k="recoveryInfo">Delete ٿيل رڪارڊ هتان Restore ڪري سگهجن ٿا.</div><div id="trashList"></div></div></section>
+<section id="settings" class="page"><div class="card"><h2 data-k="future">⚙️ Settings & Future Options</h2><div class="notice" data-k="futureInfo">Backup، PIN Lock، PDF Report، آمدني/خرچ ۽ ٻيا options هن structure ۾ شامل ڪري سگهجن ٿا.</div><button class="btn light" onclick="backup()" data-k="backup">💾 Backup Download</button><button class="btn danger" onclick="clearData()" data-k="clear">⚠️ سڀ Data ختم ڪريو</button></div></section>
+</main>
+<section class="v7-search">
+<h3>🔎 Search Portal</h3>
+<div class="v7-search-row">
+<input id="v7Search" type="search" placeholder="Search records, income, expense..." oninput="v7SearchPortal()">
+<button class="v6-btn v6-primary" onclick="v7ClearSearch()">Clear</button>
+</div>
+<div id="v7Results" class="v7-results">Search ڪرڻ لاءِ مٿي لکڻ شروع ڪريو.</div>
+</section><section id="professional-v6" class="v6-grid">
+  <div class="v6-card">
+    <h3>📊 Dashboard</h3>
+    <div class="v6-stat" id="v6Balance">Rs 0</div>
+    <div>مجموع آمدني − خرچ</div>
+  </div>
+
+  <div class="v6-card">
+    <h3>💰 آمدني</h3>
+    <div class="v6-stat" id="v6Income">Rs 0</div>
+    <div>ڪل آمدني</div>
+  </div>
+
+  <div class="v6-card">
+    <h3>💸 خرچ</h3>
+    <div class="v6-stat" id="v6Expense">Rs 0</div>
+    <div>ڪل خرچ</div>
+  </div>
+
+  <div class="v6-card">
+    <h3>🔐 PIN Lock</h3>
+    <p>پورٽل کي PIN سان محفوظ ڪريو.</p>
+    <div class="v6-actions no-print">
+      <button class="v6-btn v6-dark" onclick="v6SetPin()">PIN Set/Change</button>
+      <button class="v6-btn v6-warning" onclick="v6LockNow()">Lock Now</button>
+    </div>
+  </div>
+
+  <div class="v6-card" style="grid-column:1/-1">
+    <h3>💰 آمدني / خرچ</h3>
+    <div class="v6-form no-print">
+      <input id="v6Desc" placeholder="تفصيل / Description">
+      <input id="v6Amount" type="number" min="0" step="0.01" placeholder="رقم">
+      <select id="v6Type"><option value="income">آمدني</option><option value="expense">خرچ</option></select>
+      <input id="v6Date" type="date">
+      <button class="v6-btn v6-success" onclick="v6AddLedger()">Add</button>
+    </div>
+    <table class="v6-table">
+      <thead><tr><th>تاريخ</th><th>تفصيل</th><th>قسم</th><th>رقم</th><th class="no-print">Action</th></tr></thead>
+      <tbody id="v6LedgerBody"></tbody>
+    </table>
+  </div>
+
+  <div class="v6-card" style="grid-column:1/-1">
+    <h3>💾 Backup & Recovery</h3>
+    <p>Records، آمدني/خرچ ۽ settings جو backup JSON ۾ محفوظ ڪريو ۽ پوءِ واپس Restore ڪريو.</p>
+    <div class="v6-actions no-print">
+      <button class="v6-btn v6-primary" onclick="v6Backup()">⬇️ Backup</button>
+      <label class="v6-btn v6-dark" style="display:inline-block">⬆️ Restore
+        <input type="file" accept=".json,application/json" onchange="v6Restore(event)" style="display:none">
+      </label>
+    </div>
+  </div>
+
+  <div class="v6-card" style="grid-column:1/-1">
+    <h3>📄 PDF Report</h3>
+    <p>مڪمل portal report کي PDF ۾ محفوظ ڪرڻ لاءِ print dialog استعمال ڪريو.</p>
+    <div class="v6-actions no-print">
+      <button class="v6-btn v6-primary" onclick="v6PdfReport()">🖨️ PDF Report</button>
+    </div>
+  </div>
+</section>
+
+<div id="v6Lock">
+  <div class="v6-lockbox">
+    <h2>🔐 Abrar Khaskheli Portal</h2>
+    <p>PIN داخل ڪريو</p>
+    <input id="v6PinInput" type="password" inputmode="numeric" maxlength="12" placeholder="PIN">
+    <button class="v6-btn v6-primary" onclick="v6Unlock()">Unlock</button>
+    <p id="v6PinMsg" style="color:#c33"></p>
+  </div>
+</div>
+
+<footer>
+<div>🌾 Abrar Khaskheli — Land & حساب ڪتاب Portal</div>
+<div class="contacts">
+<a class="contact fb" href="https://www.facebook.com/search/top?q=Abrar%20Khaskheli" target="_blank" rel="noopener"><img class="v7-social-img" src="./facebook.png" alt="Facebook logo"><span>Facebook: Abrar Khaskheli</span></a>
+<a class="contact wa" href="https://wa.me/923173796981?text=Assalam%20o%20Alaikum%2C%20mujhe%20Abrar%20Khaskheli%20Land%20Portal%20ke%20bare%20mein%20maloomat%20chahiye." target="_blank" rel="noopener"><img class="v7-social-img" src="./whatsapp.png" alt="WhatsApp logo"><span>WhatsApp: 0317-3796981</span></a>
+</div>
+</footer>
+<script>
+const T={
+sd:{brand:"Abrar Khaskheli",title:"زمين ۽ حساب ڪتاب پورٽل",subtitle:"آسان، تيز ۽ موبائل دوست ويب پورٽل",dashboard:"🏠 Dashboard",records:"📋 رڪارڊ",calculator:"📐 ڪيلڪيوليٽر",recovery:"♻️ Recovery",settings:"⚙️ Settings",overview:"📊 Dashboard",total:"ڪل رڪارڊ",active:"Active",trash:"Trash",newrecord:"➕ نئون رڪارڊ",owner:"مالڪ جو نالو",village:"ڳوٺ / شهر",survey:"خسرو نمبر",area:"زمين (چورس فٽ)",note:"نوٽ",save:"💾 رڪارڊ محفوظ ڪريو",landrecords:"📋 زمين جا رڪارڊ",search:"🔍 نالو، ڳوٺ يا خسرو نمبر ڳوليو...",landcalc:"📐 زمين جو حساب",width:"مينڊيو (فٽ)",length:"لام (فٽ)",calculate:"🧮 حساب ڪريو",recoveryTitle:"♻️ Recovery / Trash",recoveryInfo:"Delete ٿيل رڪارڊ هتان Restore ڪري سگهجن ٿا.",future:"⚙️ Settings & Future Options",futureInfo:"Backup، PIN Lock، PDF Report، آمدني/خرچ ۽ ٻيا options هن structure ۾ شامل ڪري سگهجن ٿا.",backup:"💾 Backup Download",clear:"⚠️ سڀ Data ختم ڪريو"},
+ur:{brand:"Abrar Khaskheli",title:"زمین اور حساب کتاب پورٹل",subtitle:"آسان، تیز اور موبائل فرینڈلی ویب پورٹل",dashboard:"🏠 ڈیش بورڈ",records:"📋 ریکارڈ",calculator:"📐 کیلکولیٹر",recovery:"♻️ ریکوری",settings:"⚙️ سیٹنگز",overview:"📊 ڈیش بورڈ",total:"کل ریکارڈ",active:"فعال",trash:"ٹریش",newrecord:"➕ نیا ریکارڈ",owner:"مالک کا نام",village:"گاؤں / شہر",survey:"خسرو نمبر",area:"زمین (مربع فٹ)",note:"نوٹ",save:"💾 ریکارڈ محفوظ کریں",landrecords:"📋 زمین کے ریکارڈ",search:"🔍 نام، گاؤں یا خسرو نمبر تلاش کریں...",landcalc:"📐 زمین کا حساب",width:"مینڈیو (فٹ)",length:"لام (فٹ)",calculate:"🧮 حساب کریں",recoveryTitle:"♻️ ریکوری / ٹریش",recoveryInfo:"Delete کیے گئے ریکارڈ یہاں سے Restore کیے جا سکتے ہیں۔",future:"⚙️ سیٹنگز اور مستقبل کے آپشنز",futureInfo:"Backup، PIN Lock، PDF Report، آمدنی/خرچ اور مزید options شامل کیے جا سکتے ہیں۔",backup:"💾 بیک اپ ڈاؤن لوڈ",clear:"⚠️ تمام Data ختم کریں"},
+en:{brand:"Abrar Khaskheli",title:"Land & Accounts Portal",subtitle:"Simple, fast and mobile-friendly web portal",dashboard:"🏠 Dashboard",records:"📋 Records",calculator:"📐 Calculator",recovery:"♻️ Recovery",settings:"⚙️ Settings",overview:"📊 Dashboard",total:"Total Records",active:"Active",trash:"Trash",newrecord:"➕ New Record",owner:"Owner Name",village:"Village / City",survey:"Survey Number",area:"Land (sq ft)",note:"Note",save:"💾 Save Record",landrecords:"📋 Land Records",search:"🔍 Search name, village or survey number...",landcalc:"📐 Land Calculator",width:"Width (ft)",length:"Length (ft)",calculate:"🧮 Calculate",recoveryTitle:"♻️ Recovery / Trash",recoveryInfo:"Deleted records can be restored from here.",future:"⚙️ Settings & Future Options",futureInfo:"Backup, PIN Lock, PDF Report, income/expense and more can be added.",backup:"💾 Download Backup",clear:"⚠️ Delete All Data"}
+};
+let lang=localStorage.getItem("portal_lang")||"sd", records=JSON.parse(localStorage.getItem("ak_records")||"[]"), trash=JSON.parse(localStorage.getItem("ak_trash")||"[]");
+function setLanguage(x){lang=x;localStorage.setItem("portal_lang",x);document.documentElement.lang=x;document.documentElement.dir=x==="en"?"ltr":"rtl";document.querySelectorAll("[data-k]").forEach(e=>{let k=e.dataset.k;if(T[x][k])e.textContent=T[x][k]});document.querySelectorAll("[data-placeholder]").forEach(e=>e.placeholder=T[x][e.dataset.placeholder]);render();renderTrash()}
+function tab(id,el){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id==="trash"?"trashPage":id).classList.add("active");document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));el.classList.add("active");scrollTo(0,0)}
+function save(){localStorage.setItem("ak_records",JSON.stringify(records));localStorage.setItem("ak_trash",JSON.stringify(trash));stats();render();renderTrash()}
+function saveRecord(){let o=owner.value.trim();if(!o)return alert(lang==="en"?"Enter owner name":lang==="ur"?"مالک کا نام لکھیں":"مالڪ جو نالو لکو");records.unshift({id:Date.now(),owner:o,village:village.value,survey:survey.value,area:area.value,note:note.value,date:new Date().toLocaleString()});["owner","village","survey","area","note"].forEach(x=>document.getElementById(x).value="");save();alert(lang==="en"?"Record saved":lang==="ur"?"ریکارڈ محفوظ ہوگیا":"رڪارڊ محفوظ ٿي ويو")}
+function stats(){total.textContent=records.length+trash.length;active.textContent=records.length;document.getElementById("trash").textContent=trash.length}
+function render(){let q=(search?.value||"").toLowerCase(),a=records.filter(r=>JSON.stringify(r).toLowerCase().includes(q));list.innerHTML=a.length?a.map(r=>`<div class="record"><div><b>👤 ${esc(r.owner)}</b><br>📍 ${esc(r.village||"—")} | 📋 ${esc(r.survey||"—")}<br>📐 ${esc(r.area||"0")} sq ft<br><small>${esc(r.date)}</small></div><button class="dots" onclick="menu(event,${r.id})">⋮</button></div>`).join(""):"<p>—</p>"}
+function menu(e,id){document.querySelectorAll(".menuBox").forEach(x=>x.remove());let b=document.createElement("div");b.className="menuBox";b.style.left=Math.max(8,e.clientX-150)+"px";b.style.top=e.clientY+5+"px";b.innerHTML=`<button onclick="view(${id})">👁️ View</button><button onclick="edit(${id})">✏️ Edit</button><button onclick="del(${id})">🗑️ Delete</button>`;document.body.appendChild(b);setTimeout(()=>document.addEventListener("click",()=>b.remove(),{once:true}),0)}
+function view(id){let r=records.find(x=>x.id===id);alert(`${r.owner}\n${r.village||"—"}\n${r.survey||"—"}\n${r.area||"0"} sq ft\n${r.note||"—"}`)}
+function edit(id){let r=records.find(x=>x.id===id);if(!r)return;r.owner=prompt("Owner:",r.owner)||r.owner;r.village=prompt("Village:",r.village)||r.village;r.survey=prompt("Survey:",r.survey)||r.survey;r.area=prompt("Sq ft:",r.area)||r.area;r.note=prompt("Note:",r.note)||r.note;save()}
+function del(id){let i=records.findIndex(x=>x.id===id);if(i<0)return;let r=records.splice(i,1)[0];r.deletedAt=new Date().toLocaleString();trash.unshift(r);save()}
+function renderTrash(){trashList.innerHTML=trash.length?trash.map(r=>`<div class="record"><div>🗑️ <b>${esc(r.owner)}</b><br>${esc(r.village||"—")} | ${esc(r.survey||"—")}<br><small>${esc(r.deletedAt)}</small></div><div><button class="btn good" onclick="restore(${r.id})">♻️ Restore</button><button class="btn danger" onclick="permanent(${r.id})">Delete</button></div></div>`).join(""):"<p>—</p>"}
+function restore(id){let i=trash.findIndex(x=>x.id===id);let r=trash.splice(i,1)[0];delete r.deletedAt;records.unshift(r);save()}
+function permanent(id){if(confirm("Permanently delete?")){trash=trash.filter(x=>x.id!==id);save()}}
+function calc(){let m=+document.getElementById("m").value||0,l=+document.getElementById("l").value||0,s=m*l;result.innerHTML=`${m} × ${l} = <b>${s.toLocaleString()}</b> sq ft<br>${lang==="en"?"Ghunta":"گهنٽا"}: <b>${(s/1089).toFixed(2)}</b><br>${lang==="en"?"Acres":"ايڪڙ"}: <b>${(s/43560).toFixed(4)}</b>`}
+function backup(){let a=document.createElement("a"),b=new Blob([JSON.stringify({records,trash},null,2)],{type:"application/json"});a.href=URL.createObjectURL(b);a.download="abrar-portal-backup.json";a.click()}
+function clearData(){if(confirm("Delete all data?")){records=[];trash=[];save()}}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+setLanguage(lang);stats();render();renderTrash();
+</script>
+<script id="professional-v6-js">
+(function(){
+  const KEY='ak_v6_ledger', PIN='ak_v6_pin';
+  const $=id=>document.getElementById(id);
+  function read(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}}
+  function save(a){localStorage.setItem(KEY,JSON.stringify(a));render()}
+  function money(n){return 'Rs '+Number(n||0).toLocaleString()}
+  window.v6AddLedger=function(){
+    const d=$('v6Desc').value.trim(), a=Number($('v6Amount').value), t=$('v6Type').value, date=$('v6Date').value||new Date().toISOString().slice(0,10);
+    if(!d||!a||a<0){alert('تفصيل ۽ صحيح رقم داخل ڪريو.');return}
+    const x=read(); x.unshift({id:Date.now(),desc:d,amount:a,type:t,date}); save(x);
+    $('v6Desc').value=''; $('v6Amount').value='';
+  };
+  window.v6DeleteLedger=function(id){save(read().filter(x=>x.id!==id))};
+  function render(){
+    const a=read(), inc=a.filter(x=>x.type==='income').reduce((s,x)=>s+x.amount,0), exp=a.filter(x=>x.type==='expense').reduce((s,x)=>s+x.amount,0);
+    $('v6Income').textContent=money(inc); $('v6Expense').textContent=money(exp); $('v6Balance').textContent=money(inc-exp);
+    $('v6LedgerBody').innerHTML=a.map(x=>`<tr><td>${x.date}</td><td>${esc(x.desc)}</td><td>${x.type==='income'?'آمدني':'خرچ'}</td><td>${money(x.amount)}</td><td class="no-print"><button class="v6-btn v6-danger" onclick="v6DeleteLedger(${x.id})">Delete</button></td></tr>`).join('') || '<tr><td colspan="5">اڃا ڪو record ناهي.</td></tr>';
+  }
+  function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  window.v6Backup=function(){
+    const data={version:6,created:new Date().toISOString(),ledger:read(),records:localStorage.getItem('records'),trash:localStorage.getItem('trash'),language:localStorage.getItem('lang')};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+    a.href=url;a.download='Abrar_Khaskheli_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);
+  };
+  window.v6Restore=function(ev){
+    const f=ev.target.files[0]; if(!f)return; const r=new FileReader();
+    r.onload=()=>{try{const d=JSON.parse(r.result); if(Array.isArray(d.ledger))localStorage.setItem(KEY,JSON.stringify(d.ledger)); if(d.records!==undefined)localStorage.setItem('records',d.records); if(d.trash!==undefined)localStorage.setItem('trash',d.trash); if(d.language)localStorage.setItem('lang',d.language); render(); alert('Backup restore ٿي ويو.')}catch(e){alert('Backup file صحيح ناهي.')}};
+    r.readAsText(f);
+  };
+  window.v6PdfReport=function(){
+    const old=document.title; document.title='Abrar Khaskheli - PDF Report'; window.print(); setTimeout(()=>document.title=old,1000);
+  };
+  window.v6SetPin=function(){
+    const p=prompt('نئون PIN داخل ڪريو (مثال: 1234):');
+    if(p===null)return; if(!/^\d{4,12}$/.test(p)){alert('PIN 4 کان 12 digits هجڻ گهرجي.');return}
+    localStorage.setItem(PIN,p); alert('PIN محفوظ ٿي ويو.');
+  };
+  window.v6LockNow=function(){if(!localStorage.getItem(PIN)){alert('پهريان PIN Set ڪريو.');return} $('v6Lock').style.display='flex'; $('v6PinInput').focus()};
+  window.v6Unlock=function(){
+    if($('v6PinInput').value===localStorage.getItem(PIN)){ $('v6Lock').style.display='none'; $('v6PinInput').value=''; $('v6PinMsg').textContent=''}
+    else $('v6PinMsg').textContent='غلط PIN';
+  };
+  document.addEventListener('DOMContentLoaded',()=>{const d=new Date(); if($('v6Date'))$('v6Date').value=d.toISOString().slice(0,10); render()});
+})();
+</script>
+
+<script id="v7-js">
+function v7ClearSearch(){document.getElementById('v7Search').value='';document.getElementById('v7Results').innerHTML='Search ڪرڻ لاءِ مٿي لکڻ شروع ڪريو.'}
+function v7SearchPortal(){
+ const q=document.getElementById('v7Search').value.trim().toLowerCase(), out=document.getElementById('v7Results');
+ if(!q){out.innerHTML='Search ڪرڻ لاءِ مٿي لکڻ شروع ڪريو.';return}
+ let hits=[];
+ document.querySelectorAll('main .card, main .v6-card, main section, #professional-v6').forEach((el,i)=>{
+   const t=(el.innerText||'').replace(/\s+/g,' ').trim();
+   if(t && t.toLowerCase().includes(q)) hits.push(t.slice(0,220));
+ });
+ try{
+   const a=JSON.parse(localStorage.getItem('ak_v6_ledger')||'[]');
+   a.forEach(x=>{const t=(x.date+' '+x.desc+' '+x.type+' '+x.amount);if(t.toLowerCase().includes(q))hits.push('Ledger: '+t)})
+ }catch(e){}
+ hits=[...new Set(hits)].slice(0,20);
+ out.innerHTML=hits.length?hits.map(x=>'<div class="v7-hit">'+x.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))+'</div>').join(''):'ڪوبه نتيجو نه مليو.';
+}
+</script>
+<script id="v8-offline-js">
+(function(){
+ const status=document.getElementById('v8OfflineStatus'), text=document.getElementById('v8OfflineText');
+ function update(){
+   const on=navigator.onLine;
+   status.classList.toggle('offline',!on);
+   text.textContent=on?'🟢 Online — Offline mode ready':'🟠 Offline mode — توهان جو portal local طور ڪم ڪري رهيو آهي';
+ }
+ window.addEventListener('online',update); window.addEventListener('offline',update); update();
+ // Register the service worker so the app shell and local assets remain available offline.
+ if('serviceWorker' in navigator){
+   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+ }
+})();
+</script>
+</body></html>
